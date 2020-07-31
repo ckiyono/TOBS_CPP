@@ -25,20 +25,26 @@ int main()
 		vars.add(IloNumVar(env, 0.0, 40.0));
 		vars.add(IloNumVar(env));
 		vars.add(IloNumVar(env));
-
+		
 		IloRange constraint1 = IloRange(env, -IloInfinity, 20);
-		constraint1.setLinearCoef(vars[0], -1);
-		constraint1.setLinearCoef(vars[1],  1);
-		constraint1.setLinearCoef(vars[2],  1);
+		IloNumArray con1Coefs(env, 3);
+		con1Coefs[0] = -1;
+		con1Coefs[1] = 1;
+		con1Coefs[2] = 1;
+		constraint1.setLinearCoefs(vars, con1Coefs);
 		IloRange constraint2 = IloRange(env, -IloInfinity, 30);
-		constraint2.setLinearCoef(vars[0],  1);
-		constraint2.setLinearCoef(vars[1], -3);
-		constraint2.setLinearCoef(vars[2],  1);
+		IloNumArray con2Coefs(env, 3);
+		con2Coefs[0] = 1;
+		con2Coefs[1] = -3;
+		con2Coefs[2] = 1;
+		constraint2.setLinearCoefs(vars, con2Coefs);
 
 		IloObjective obj = IloMaximize(env, 0);
-		obj.setLinearCoef(vars[0], 1);
-		obj.setLinearCoef(vars[1], 2);
-		obj.setLinearCoef(vars[2], 3);
+		IloNumArray objCoefs(env,3);
+		objCoefs[0] = 1;
+		objCoefs[1] = 2;
+		objCoefs[2] = 3;
+		obj.setLinearCoefs(vars, objCoefs);
 
 		model.add(obj);
 		model.add(constraint1);
