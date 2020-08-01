@@ -83,7 +83,7 @@ TEST(Cplex_Test, LP_test)
 
 TEST(Cplex_Test, ILP_test_1_Constraint)
 {
-	// Linear Programming test
+	// Integer Programming test with 1 constraint
 	// Maximixe     8*x[0] + 11*x[1] + 6*x[2] + 4*x[3]
 	// Subject to   5*x[0] +  7*x[1] + 4*x[2] + 3*x[3] <= 14
 	// Bounds       0 <= x[i] <= 1
@@ -144,7 +144,7 @@ TEST(Cplex_Test, ILP_test_1_Constraint)
 
 TEST(Cplex_Test, ILP_test_2_Constraints)
 {
-	// Linear Programming test
+	// Integer Programming test with 2 constraints
 	// Maximixe     8*x[0] + 11*x[1] + 6*x[2] + 4*x[3]
 	// Subject to   5*x[0] +  7*x[1] + 4*x[2] + 3*x[3] <= 14
 	//                x[0] +    x[1] +   x[2] +   x[3] <=  2
@@ -215,7 +215,7 @@ TEST(Cplex_Test, ILP_test_2_Constraints)
 
 TEST(Cplex_Test, ILP_test_3_Constraints)
 {
-	// Linear Programming test
+	// Integer Programming test with 3 constraints
 	// Maximixe     8*x[0] + 11*x[1] + 6*x[2] + 4*x[3]
 	// Subject to   5*x[0] +  7*x[1] + 4*x[2] + 3*x[3] <= 14
 	//                x[0] +    x[1] +   x[2] +   x[3] <=  2
@@ -296,7 +296,7 @@ TEST(Cplex_Test, ILP_test_3_Constraints)
 
 TEST(Cplex_Test, ILP_test_4_Constraints)
 {
-	// Linear Programming test
+	// Integer Programming test with 4 constraints
 	// Maximixe     8*x[0] + 11*x[1] + 6*x[2] + 4*x[3]
 	// Subject to   5*x[0] +  7*x[1] + 4*x[2] + 3*x[3] <= 14
 	//                x[0] +    x[1] +   x[2] +   x[3] <=  2
