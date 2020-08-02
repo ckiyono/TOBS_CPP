@@ -166,30 +166,11 @@ void TOBS::cplexSolve(const std::vector<double> dfdx,
 	env.end();
 }
 
-void TOBS::ILP()
+void TOBS::ILP(const std::vector<double> dfdx,
+	const std::vector<double> gbar,
+	const std::vector<std::vector<double>> dgdx)
 {
-	size_t nVars = designVariables_->size();
-	size_t nConst = constraintValues_.size();
-
-	std::vector<double> dfdx = *objSensitivity_;
-
-	std::vector<double> g;
-	std::vector<double> gbar;
-	std::vector<std::vector<double>> dgdx;
-
-	for (int j = 0; j < nConst; j++)
-	{
-		g.push_back(*constraintValues_[j]);
-		gbar.push_back(constraintTargets_[j]);
-		dgdx.push_back(*contraintSensitivities_[j]);
-	}
-
-	constraintNormalization(g, gbar, dgdx);
-
-	constraintRelaxation(g, gbar);
-
-	addFlipLimitConstraint(gbar, dgdx);
-
+	
 	cplexSolve(dfdx, gbar, dgdx);
 
 }
@@ -229,12 +210,16 @@ void TOBS::setDesignVariables(std::vector<double>* designVariables)
 	upperLimits_.resize(nVars, 0.0);
 }
 
-void TOBS::createDesignVariables()
+void TOBS::createDesignVariables(int nVars)
 {
 	if (designVariables_ == nullptr)
-		designVariables_ = new std::vector<double>;
+		designVariables_ = new std::vector<double>(nVars);
 
-	size_t nVars = designVariables_->size();
+	for (int i = 0; i < nVars; i++)
+	{
+		designVariables_->at(i) = 1.0;
+	}
+
 	lowerLimits_.resize(nVars, 0.0);
 	upperLimits_.resize(nVars, 0.0);
 }
@@ -265,7 +250,29 @@ void TOBS::addConstraint(double* value, double target, std::vector<double>* sens
 
 void TOBS::solve()
 {
+	size_t nVars = designVariables_->size();
+	size_t nConst = constraintValues_.size();
+
+	std::vector<double> dfdx = *objSensitivity_;
+
+	std::vector<double> g;
+	std::vector<double> gbar;
+	std::vector<std::vector<double>> dgdx;
+
+	for (int j = 0; j < nConst; j++)
+	{
+		g.push_back(*constraintValues_[j]);
+		gbar.push_back(constraintTargets_[j]);
+		dgdx.push_back(*contraintSensitivities_[j]);
+	}
+
 	calculateVariableLimits();
 
-	ILP();
+	constraintNormalization(g, gbar, dgdx);
+
+	constraintRelaxation(g, gbar);
+
+	addFlipLimitConstraint(gbar, dgdx);
+
+	ILP(dfdx, gbar, dgdx);
 }

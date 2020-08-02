@@ -53,9 +53,10 @@ private:
 		const std::vector<double> gbar,
 		const std::vector<std::vector<double>> dgdx);
 
-	void ILP();
+	void ILP(const std::vector<double> dfdx,
+		const std::vector<double> gbar,
+		const std::vector<std::vector<double>> dgdx);
 
-	
 public:
 
 	TOBS();
@@ -63,7 +64,7 @@ public:
 	TOBS(std::vector<double>* designVariables, double epsilons, double flipLimits);
 
 	void setDesignVariables(std::vector<double>* designVariables);
-	void createDesignVariables();
+	void createDesignVariables(int nVars);
 	std::vector<double>* getDesignVariablesPtr();
 	std::vector<double> getDesignVariables();
 

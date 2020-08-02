@@ -82,7 +82,7 @@ TEST(TOBS_Test, Definition_test)
 	constraintSens.push_back(cSens);
 	cSens.clear();
 
-	TOBS tobs(designVariables, 0.01, 0.5);
+	TOBS tobs(designVariables, 0.01, 0.25);
 	
 	for (int i = 0; i < nVars; i++)
 	{
@@ -97,7 +97,6 @@ TEST(TOBS_Test, Definition_test)
 		{
 			constraintValues[j] += (*designVariables)[i] * constraintSens[j][i];
 		}
-		//constraintValues[j] -= constraintTargets[j];
 		tobs.addConstraint(&constraintValues[j], constraintTargets[j], &constraintSens[j]);
 	}
 
@@ -135,7 +134,6 @@ TEST(TOBS_Test, Definition_test)
 			{
 				constraintValues[j] += (*designVariables)[i] * constraintSens[j][i];
 			}
-			//constraintValues[j] -= constraintTargets[j];
 		}
 
 		diff = abs(objValue - objValueOld) / abs(objValueOld);
