@@ -22,10 +22,10 @@ TEST(TOBS_Test, Definition_test)
 	int nConst = 4;
 
 	std::vector<double>* designVariables = new std::vector<double>;
-	designVariables->push_back(0);
 	designVariables->push_back(1);
 	designVariables->push_back(1);
-	designVariables->push_back(0);
+	designVariables->push_back(1);
+	designVariables->push_back(1);
 
 	double objValue = 0;
 
@@ -82,13 +82,14 @@ TEST(TOBS_Test, Definition_test)
 	constraintSens.push_back(cSens);
 	cSens.clear();
 
-	TOBS tobs(designVariables, 0.001, 0.05);
-
+	TOBS tobs(designVariables, 0.01, 0.5);
+	
 	for (int i = 0; i < nVars; i++)
 	{
 		objValue += (*designVariables)[i] * objSens[i];
 	}
-	tobs.setObjective(objValue, objSens);
+	tobs.setObjective(&objValue, &objSens, true);
+	
 
 	for (int j = 0; j < nConst; j++)
 	{
@@ -96,7 +97,50 @@ TEST(TOBS_Test, Definition_test)
 		{
 			constraintValues[j] += (*designVariables)[i] * constraintSens[j][i];
 		}
-		tobs.addConstraint(constraintValues[j], constraintTargets[j], constraintSens[j]);
+		//constraintValues[j] -= constraintTargets[j];
+		tobs.addConstraint(&constraintValues[j], constraintTargets[j], &constraintSens[j]);
 	}
 
+	double diff = 1;
+	double objValueOld = objValue;
+
+	while (diff > 1e-8)
+	{
+		std::cout << std::endl;
+		std::cout << "Solution value = " << objValue << std::endl;
+		std::cout << "Values = [";
+		for (int i = 0; i < nVars; i++)
+		{
+			std::cout << (*designVariables)[i];
+			if (i != nVars - 1)
+				std::cout << ", ";
+		}
+		std::cout << "]" << std::endl;
+		std::cout << std::endl;
+
+		tobs.solve();
+
+		objValue = 0.0;
+
+		for (int i = 0; i < nVars; i++)
+		{
+			objValue += (*designVariables)[i] * objSens[i];
+		}
+
+		for (int j = 0; j < nConst; j++)
+		{
+			constraintValues[j] = 0.0;
+
+			for (int i = 0; i < nVars; i++)
+			{
+				constraintValues[j] += (*designVariables)[i] * constraintSens[j][i];
+			}
+			//constraintValues[j] -= constraintTargets[j];
+		}
+
+		diff = abs(objValue - objValueOld) / abs(objValueOld);
+
+		objValueOld = objValue;
+
+	}
 }
