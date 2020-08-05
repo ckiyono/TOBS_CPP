@@ -10,6 +10,9 @@ endif(MSVC)
 file(GLOB CPPSRC
     "*.cpp")
 
+file(GLOB HPPSRC
+    "*.h")
+
 ########################
 ########################
 # Cplex Libraries
@@ -22,8 +25,13 @@ find_package(Cplex REQUIRED)
 
 find_package(GTest REQUIRED)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CPLEX_INCLUDE_DIRS} ${GTEST_INCLUDE_DIRS})
-add_executable(TOBS_TEST ${CPPSRC}) 
+########################
+########################
+# Eigen3 Libraries
+set(EIGEN3_INCLUDE_DIR "${TOBS_LIBRARY_DIR}/Eigen3")
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CPLEX_INCLUDE_DIRS} ${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
+add_executable(TOBS_TEST ${CPPSRC} ${HPPSRC}) 
 
 TARGET_LINK_LIBRARIES(TOBS_TEST 
 	PUBLIC TOBS_libs
